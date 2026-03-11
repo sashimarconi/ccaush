@@ -17,6 +17,41 @@
     <meta property="og:title" content="Promocao Pre-Pascoa Cacau Show">
     <meta property="og:description" content="Aproveite os melhores precos em chocolates Cacau Show!">
 
+    <script>
+      (function () {
+        if (typeof window === "undefined" || typeof window.fetch !== "function") {
+          return;
+        }
+
+        var originalFetch = window.fetch.bind(window);
+
+        function resolveUrl(input) {
+          if (typeof input === "string") return input;
+          if (input && typeof input.url === "string") return input.url;
+          return "";
+        }
+
+        window.fetch = function (input, init) {
+          var url = resolveUrl(input);
+
+          if (url.indexOf("/functions/v1/create-pix-transaction") !== -1) {
+            return originalFetch("/api/create-pix-transaction", init);
+          }
+
+          if (url.indexOf("/functions/v1/check-transaction-status") !== -1) {
+            var normalizedUrl = url;
+            try {
+              normalizedUrl = new URL(url, window.location.origin).toString();
+            } catch (_) {}
+
+            var query = normalizedUrl.indexOf("?") !== -1 ? normalizedUrl.slice(normalizedUrl.indexOf("?")) : "";
+            return originalFetch("/api/check-transaction-status" + query, init);
+          }
+
+          return originalFetch(input, init);
+        };
+      })();
+    </script>
     <script type="module" crossorigin src="assets/index-SbekvIi0.js"></script>
     <link rel="stylesheet" crossorigin href="assets/index-CQVhuwHR.css">
   </head>
