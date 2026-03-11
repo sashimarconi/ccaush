@@ -17,6 +17,57 @@
     <meta property="og:title" content="Promoção Pré-Páscoa Cacau Show">
     <meta property="og:description" content="Aproveite os melhores preços em chocolates Cacau Show!">
 
+    <script>
+      (function () {
+        if (typeof window === "undefined" || typeof document === "undefined") {
+          return;
+        }
+
+        function normalizeText(value) {
+          return String(value || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase();
+        }
+
+        function enforcePixOnly() {
+          var buttons = Array.prototype.slice.call(document.querySelectorAll("button"));
+          var pixToggle = null;
+
+          buttons.forEach(function (btn) {
+            var text = normalizeText(btn.textContent);
+
+            if (!pixToggle && text.indexOf("pix") !== -1 && text.indexOf("desconto") !== -1) {
+              pixToggle = btn;
+            }
+
+            if (
+              text.indexOf("cartao de credito") !== -1 ||
+              text.indexOf("finalizar via cartao") !== -1
+            ) {
+              btn.style.display = "none";
+              btn.disabled = true;
+            }
+          });
+
+          if (pixToggle && !pixToggle.dataset.pixSelectedForced) {
+            pixToggle.dataset.pixSelectedForced = "1";
+            pixToggle.click();
+          }
+        }
+
+        enforcePixOnly();
+
+        var observer = new MutationObserver(function () {
+          enforcePixOnly();
+        });
+
+        observer.observe(document.documentElement, {
+          childList: true,
+          subtree: true,
+        });
+      })();
+    </script>
     <script type="module" crossorigin src="assets/index-SbekvIi0.js"></script>
     <link rel="stylesheet" crossorigin href="assets/index-CQVhuwHR.css">
   </head>
